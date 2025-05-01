@@ -17,6 +17,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DB_DIR = BASE_DIR / "db.sqlite3"
 
 DEBUG = os.getenv("DEBUG", False)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
@@ -24,7 +25,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -32,10 +32,10 @@ if not DEBUG:
     django_cloud_run_service = os.getenv("DJANGO_CLOUD_RUN_SERVICE")
     cloud_run_region = os.getenv("GCP_REGION")
     project_number = os.getenv("GCP_PROJECT_NUMBER")
+    DB_DIR = Path(__file__).resolve().parent.parent.parent / "db/db.sqlite3"
 
     if django_cloud_run_service and cloud_run_region and project_number:
         ALLOWED_HOSTS = [f"{django_cloud_run_service}-{project_number}.{cloud_run_region}.run.app"]
-
 
 # Application definition
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "drf_spectacular",
     "todo_list",
@@ -59,6 +60,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
 ]
 
 ROOT_URLCONF = "djangoapi.urls"
@@ -105,7 +112,7 @@ SPECTACULAR_SETTINGS = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db/db.sqlite3",
+        "NAME": DB_DIR
     }
 }
 
