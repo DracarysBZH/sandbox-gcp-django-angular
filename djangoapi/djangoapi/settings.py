@@ -18,17 +18,23 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = os.getenv("DEBUG", False)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    django_cloud_run_service = os.getenv("DJANGO_CLOUD_RUN_SERVICE")
+    cloud_run_region = os.getenv("GCP_REGION")
+    project_number = os.getenv("GCP_PROJECT_NUMBER")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^iesfw#*v5(f-!8(s&ts(xgubdt(qx9lca%7@+txf^^5ky8%cy"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+    if django_cloud_run_service and cloud_run_region and project_number:
+        ALLOWED_HOSTS = [f"{django_cloud_run_service}-{project_number}.{cloud_run_region}.run.app"]
 
 
 # Application definition
