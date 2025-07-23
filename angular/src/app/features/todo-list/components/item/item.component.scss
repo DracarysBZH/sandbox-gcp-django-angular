@@ -1,5 +1,7 @@
 .item-card {
   width: 20rem;
+  cursor: grab;
+
   &-header {
     justify-content: space-between;
   }

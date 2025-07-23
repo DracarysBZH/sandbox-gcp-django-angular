@@ -30,12 +30,16 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     django_cloud_run_service = os.getenv("DJANGO_CLOUD_RUN_SERVICE")
+    angular_cloud_run_service = os.getenv("ANGULAR_CLOUD_RUN_SERVICE")
     cloud_run_region = os.getenv("GCP_REGION")
     project_number = os.getenv("GCP_PROJECT_NUMBER")
     DB_DIR = Path(__file__).resolve().parent.parent.parent / "db/db.sqlite3"
 
-    if django_cloud_run_service and cloud_run_region and project_number:
-        ALLOWED_HOSTS = [f"{django_cloud_run_service}-{project_number}.{cloud_run_region}.run.app"]
+    if django_cloud_run_service and django_cloud_run_service and cloud_run_region and project_number:
+        ALLOWED_HOSTS = [
+            f"{django_cloud_run_service}-{project_number}.{cloud_run_region}.run.app",
+            f"{angular_cloud_run_service}-{project_number}.{cloud_run_region}.run.app",
+        ]
 
 # Application definition
 

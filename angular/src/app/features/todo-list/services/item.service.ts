@@ -10,12 +10,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Item } from '../models/interfaces/item';
 import { CreateItem } from '../models/interfaces/create-item';
-import { environment } from 'environments/environment';
+import { AppConfigService } from 'app/core/services/app-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
-  private readonly API_URL = `${environment.apiUrl}/todo/items`;
   private readonly http = inject(HttpClient);
+  private readonly config = inject(AppConfigService);
+
+  private get API_URL(): string {
+    return `${this.config.apiUrl}/todo/items`;
+  }
 
   items: WritableSignal<Item[]> = signal<Item[]>([]);
 

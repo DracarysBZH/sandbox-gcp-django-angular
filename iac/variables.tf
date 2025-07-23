@@ -32,3 +32,8 @@ variable "django_artifact_registry_name" {
   description = "Django Artifact Registry name"
   type        = string
 }
+
+variable "angular_service_name" {
+  description = "Angular service name"
+  type        = string
+}
