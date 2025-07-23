@@ -11,6 +11,13 @@
   - [🚀 Running Locally](#-running-locally)
   - [🧪 Running Tests](#-running-tests)
   - [📤 Deploy to Cloud Run](#-deploy-to-cloud-run)
+- [🅰️ ANGULAR APP](#🅰️-angular-app)
+  - [📌 Overview](#-overview-2)
+  - [🧰 Prerequisites](#-prerequisites-2)
+  - [📁 Project Structure](#-project-structure-1)
+  - [🚀 Running Locally](#-running-locally-1)
+  - [🧪 Running Tests](#-running-tests-1)
+  - [📤 Deploy to Cloud Run](#-deploy-to-cloud-run-1)
 
 ## NOTES
 - This repository is a sandbox for testing and learning purposes.
@@ -169,5 +176,74 @@ Once all the prerequisites are in place, the django app is ready to be deployed 
 
 The workflow:
 - Builds the Docker image.
+- Pushes it to Artifact Registry
+- Deploys to Cloud Run using gcloud
+
+## 🅰️ ANGULAR APP
+
+[![📤 Deploy Angular app to Cloud Run](https://github.com/DracarysBZH/sandbox-gcp-django-angular/actions/workflows/angular.yml/badge.svg)](https://github.com/DracarysBZH/sandbox-gcp-django-angular/actions/workflows/angular.yml)
+
+### 📌 Overview
+
+This Angular application is deployed on Google Cloud Run, following the principles of:
+- Modular Architecture
+- Continuous Deployment via GitHub Actions
+- Docker for containerization
+
+### 🧰 Prerequisites
+1. Follow the instructions in [🚀 INFRASTRUCTURE](#-infrastructure)
+
+### 📁 Project Structure
+```
+angular-app/
+├── src/
+│   ├── app/
+│   │   ├── core/                        # Core features module
+│   │   │   ├── guards/
+│   │   │   ├── interceptors/
+│   │   │   ├── models/
+│   │   │   └── services/
+│   │   ├── features/                    # Feature modules
+│   │   │   └── main-layout/             # Main layout
+│   │   │   └── todo-list/               # Todo list feature
+│   │   │       ├── components/
+│   │   │       │   ├── create-item/
+│   │   │       │   ├── item/
+│   │   │       │   └── todo-list/
+│   │   │       ├── models/              # Todo interfaces & types
+│   │   │       └── services/            # Todo-specific services
+│   │   ├── app.config.ts
+│   │   └── app.routes.ts
+│   ├── environments/                    # Environment configs
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.scss                      # Global styles
+├── angular.json                         # Angular CLI configuration
+├── Dockerfile                           # Docker configuration
+├── package.json                         # Dependencies & scripts
+└── tsconfig.json                        # TypeScript configuration
+```
+
+### 🚀 Running Locally
+1. Install dependencies
+```
+npm install
+```
+2. Start the development server
+```
+npm start
+```
+
+### 🧪 Running Tests
+```
+npm run test
+```
+
+### 📤 Deploy to Cloud Run
+
+Once all the prerequisites are in place, the Angular app is ready to be deployed to Cloud Run on push to the main branch.
+
+The workflow:
+- Builds the Docker image
 - Pushes it to Artifact Registry
 - Deploys to Cloud Run using gcloud

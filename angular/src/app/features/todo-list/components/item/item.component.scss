@@ -1,0 +1,29 @@
+.item-card {
+  width: 20rem;
+  &-header {
+    justify-content: space-between;
+  }
+
+  &-footer {
+    font-size: .75rem;
+    display: flex;
+    justify-content: end;
+    margin-right: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &-placeholder {
+    width: 20rem;
+    background: #ccc;
+    border: dotted 3px #999;
+    min-height: 118px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.done-item {
+  text-decoration-line: line-through;
+}
+
+
+

@@ -1,0 +1,41 @@
+.todo-list {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  gap: 10px;
+
+  &-add {
+    position: absolute;
+  }
+
+  &-scroll-viewport {
+    height: 100px;
+    min-height: 100%;
+    width: 21.5rem;
+  }
+
+  &-item {
+    margin-bottom: 15px;
+  }
+
+  &-empty {
+    height: 100%;
+    text-align: center;
+  }
+
+  &-loading {
+    margin-top: 1rem;
+    justify-content: center;
+    display: flex;
+  }
+
+  &-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-title {
+      color: var(--mat-sys-primary);
+    }
+  }
+}

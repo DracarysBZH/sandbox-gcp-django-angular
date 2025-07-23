@@ -1,0 +1,66 @@
+<div class="todo-list-add">
+  <button
+    mat-fab
+    (click)="toggleAddItem()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+@if (!loading) {
+  <div class="todo-list">
+    <div class="todo-list-column">
+      <h1 class="todo-list-column-title">TODO</h1>
+      <cdk-virtual-scroll-viewport itemSize="50" class="todo-list-scroll-viewport">
+        <div
+          cdkDropList
+          #todoList="cdkDropList"
+          [cdkDropListData]="toDoItems()"
+          [cdkDropListConnectedTo]="[doneList]"
+          (cdkDropListDropped)="changeItemStatus($event)"
+        >
+          <div *cdkVirtualFor="let item of toDoItems(); trackBy: trackByItemId" class="todo-list-item">
+            <app-item
+              cdkDrag
+              [cdkDragData]="item"
+              [item]="item"
+            />
+          </div>
+          @if (toDoItems().length === 0) {
+            <div class="todo-list-empty"><h4>Create an Item !</h4></div>
+          }
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+
+    <div class="todo-list-column">
+      <h1 class="todo-list-column-title">DONE</h1>
+      <cdk-virtual-scroll-viewport itemSize="50" class="todo-list-scroll-viewport">
+        <div
+          cdkDropList
+          #doneList="cdkDropList"
+          [cdkDropListData]="doneItems()"
+          [cdkDropListConnectedTo]="[todoList]"
+          (cdkDropListDropped)="changeItemStatus($event)"
+        >
+          <div *cdkVirtualFor="let item of doneItems(); trackBy: trackByItemId" class="todo-list-item">
+            <app-item
+              cdkDrag
+              [cdkDragData]="item"
+              [item]="item"
+            />
+          </div>
+          @if (doneItems().length === 0) {
+            <div class="todo-list-empty"><h4>Drag an item here !</h4></div>
+          }
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+} @else {
+  <div class="todo-list-loading">
+    <mat-spinner></mat-spinner>
+  </div>
+}
+
+
