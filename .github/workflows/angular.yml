@@ -1,0 +1,97 @@
+name: 🅰️ Deploy Angular app to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'angular/**'
+      - '.github/workflows/angular.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: angular
+        run: npm ci
+
+      - name: Run linter
+        working-directory: angular
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: angular
+        run: npm run test -- --watch=false
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        working-directory: angular
+        run: npm ci
+
+      - name: Build Angular app
+        working-directory: angular
+        run: npm run build -- --configuration=production
+
+      - name: Upload build as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular
+          path: |
+            angular/dist/
+            angular/Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+
+    steps:
+      - name: Download source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: angular
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Configure Docker to use gcloud
+        run: gcloud auth configure-docker europe-west9-docker.pkg.dev
+
+      - name: Build Docker image
+        run: |
+          ls -la
+          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sandbox-django-artifact-registry/angular:${{github.sha}} .
+
+      - name: Push Docker image
+        run: |
+          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sandbox-django-artifact-registry/angular:${{github.sha}}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: sandbox-angular-service
+          image: europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sandbox-django-artifact-registry/angular:${{github.sha}}
+          region: ${{ secrets.GCP_REGION }}

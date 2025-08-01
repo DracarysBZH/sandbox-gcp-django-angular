@@ -22,6 +22,7 @@ DB_DIR = BASE_DIR / "db.sqlite3"
 DEBUG = os.getenv("DEBUG", False)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ALLOWED_ORIGINS = ["http://localhost:4200"]
 
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
@@ -40,6 +41,7 @@ if not DEBUG:
             f"{django_cloud_run_service}-{project_number}.{cloud_run_region}.run.app",
             f"{angular_cloud_run_service}-{project_number}.{cloud_run_region}.run.app",
         ]
+        CORS_ALLOWED_ORIGINS = [f"https://{angular_cloud_run_service}-{project_number}.{cloud_run_region}.run.app"]
 
 # Application definition
 
@@ -66,10 +68,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
 ]
 
 ROOT_URLCONF = "djangoapi.urls"
